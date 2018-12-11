@@ -19,6 +19,11 @@
         <module>pinyougou-content-inteface</module>
         <module>pinyougou-content-service</module>
         <module>pinyougou-portal-web</module>
+        <module>solr-demo</module>
+        <module>pinyougou-search-interface</module>
+        <module>pinyougou-search-service</module>
+        <module>pinyougou-search-web</module>
+        <module>pinyougou-solrUtil</module>
 
     </modules>
 
