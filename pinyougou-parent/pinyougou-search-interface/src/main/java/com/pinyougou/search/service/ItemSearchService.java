@@ -1,5 +1,6 @@
 package com.pinyougou.search.service;
 
+import java.io.IOException;
 import java.util.Map;
 
 public interface ItemSearchService {
@@ -8,5 +9,5 @@ public interface ItemSearchService {
      * @param map
      * @return
      */
-    public Map<String,Object> search(Map map);
+    public Map<String,Object> search(Map map) throws IOException;
 }

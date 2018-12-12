@@ -23,6 +23,7 @@
         <module>pinyougou-search-service</module>
         <module>pinyougou-search-web</module>
         <module>pinyougou-solrUtil</module>
+        <module>solr-demo</module>
 
     </modules>
 
