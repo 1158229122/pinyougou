@@ -11,6 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="css/pages-list.css" />
 		<link rel="stylesheet" type="text/css" href="css/widget-cartPanelView.css" />
 
+
 		<script src="js/plugins/angularjs/angular.min.js"></script>
 		<script src="js/base.js"></script>
 		<script src="js/service/searchService.js"></script>
@@ -19,7 +20,7 @@
 
 	</head>
 
-	<body ng-app="app" ng-controller="searchController" ng-init="search()">
+	<body ng-app="app" ng-controller="searchController" ng-init="search();">
 
 		<!-- 头部栏位 -->
 		<!--页面顶部-->
@@ -83,8 +84,8 @@
 									<form action="" class="sui-form form-inline">
 										<!--searchAutoComplete-->
 										<div class="input-append">
-											<input type="text" id="autocomplete" type="text" ng-model="searchMap.search" class="input-error input-xxlarge" />
-											<button class="sui-btn btn-xlarge btn-danger" type="button" ng-click="search()">搜索</button>
+											<input type="text" id="autocomplete" type="text" ng-change="searchMap.category='';searchMap.brand='';searchMap.spec={};"  ng-model="searchMap.keywords" class="input-error input-xxlarge" />
+											<button class="sui-btn btn-xlarge btn-danger" type="button" ng-click="searchMap.currentPage='1';search()">搜索</button>
 										</div>
 									</form>
 								</div>
@@ -150,41 +151,40 @@
 			<!--bread-->
 			<div class="bread">
 				<ul class="fl sui-breadcrumb">
-					<li>
-						<a href="#">全部结果</a>
-					</li>					
-					<li class="active">智能手机</li>					
+
+					搜索的条件:
 				</ul>
 				<ul class="tags-choose">
-					<li class="tag">全网通<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag">63G<i class="sui-icon icon-tb-close"></i></li>
+					<li class="tag" ng-show="searchMap.category!=''">商品分类:{{searchMap.category}}<i class="sui-icon icon-tb-close" ng-click="removeSearch('category','')"></i></li>
+					<li class="tag" ng-show="searchMap.brand!=''">商品分类:{{searchMap.brand}}<i class="sui-icon icon-tb-close" ng-click="removeSearch('brand','')"></i></li>
+					<li class="tag" ng-repeat="(key,value) in searchMap.spec">{{key}}:{{value}}<i class="sui-icon icon-tb-close" ng-click="removeSearch(key,'')"></i></li>
+					<li class="tag" ng-show="searchMap.price!=''" >价格区间:{{searchMap.price}}<i class="sui-icon icon-tb-close" ng-click="removeSearch('price','')"></i></li>
+
+
 				</ul>
-				<form class="fl sui-form form-dark">
-					<div class="input-control control-right">
-						<input type="text" />
-						<i class="sui-icon icon-touch-magnifier"></i>
-					</div>
-				</form>
+				<ul class="fl sui-breadcrumb" >
+
+					搜索的记录:{{resultMap.totalPage}}
+				</ul>
 				<div class="clearfix"></div>
 			</div>
 			<!--selector-->
-			<div class="clearfix selector" >
-				<div class="type-wrap" ng-show="resultMap.category!=null">
+			<div class="clearfix selector"  >
+				<div class="type-wrap" ng-show="resultMap.category!=null && searchMap.category==''">
 					<div class="fl key">商品分类</div>
 					<div class="fl value">
 						<span ng-repeat="item in resultMap.category">
-							<a href="#" >{{item}}</a>&nbsp;&nbsp;
+							<a href="#" ng-click="buildSearchItem('category',item)">{{item}}</a>&nbsp;&nbsp;
 						</span>
 
 					</div>
 					<div class="fl ext"></div>
 				</div>
-				<div class="type-wrap logo" ng-show="resultMap.brandList!=null">
+				<div class="type-wrap logo" ng-show="resultMap.brandList!=null && searchMap.brand==''">
 					<div class="fl key brand">品牌</div>
 					<div class="value logos">
 						<ul class="logo-list">
-							<li ng-repeat="item in resultMap.brandList">{{item.text}}</li>
-
+							<li ng-repeat="item in resultMap.brandList" ng-click="buildSearchItem('brand',item.text)">{{item.text}}</li>
 						</ul>
 					</div>
 					<div class="ext">
@@ -192,76 +192,42 @@
 						<a href="javascript:void(0);">更多</a>
 					</div>
 				</div>
-				<div class="type-wrap" ng-repeat="item in resultMap.specList">
-					<div class="fl key" >{{item.text}}</div>
+				<div class="type-wrap" ng-repeat="item in resultMap.specList" ng-show="searchMap.spec[item.text]==null">
+					<div class="fl key"  >{{item.text}}</div>
 					<div class="fl value">
 						<ul class="type-list">
 							<li ng-repeat="entity in item.options">
-								<a>{{entity.optionName}}</a>
+								<a ng-click="buildSearchItem(item.text,entity.optionName)" >{{entity.optionName}}</a>
 							</li>
 
 						</ul>
 					</div>
 					<div class="fl ext"></div>
 				</div>
-				<div class="type-wrap">
-					<div class="fl key">显示屏尺寸</div>
-					<div class="fl value">
-						<ul class="type-list">
-							<li>
-								<a>4.0-4.9英寸</a>
-							</li>
-							<li>
-								<a>4.0-4.9英寸</a>
-							</li>
-						</ul>
-					</div>
+
 					<div class="fl ext"></div>
 				</div>
-				<div class="type-wrap">
-					<div class="fl key">摄像头像素</div>
-					<div class="fl value">
-						<ul class="type-list">
-							<li>
-								<a>1200万以上</a>
-							</li>
-							<li>
-								<a>800-1199万</a>
-							</li>
-							<li>
-								<a>1200-1599万</a>
-							</li>
-							<li>
-								<a>1600万以上</a>
-							</li>
-							<li>
-								<a>无摄像头</a>
-							</li>
-						</ul>
-					</div>
-					<div class="fl ext"></div>
-				</div>
-				<div class="type-wrap">
+				<div class="type-wrap" ng-show="searchMap.price==''">
 					<div class="fl key">价格</div>
 					<div class="fl value">
-						<ul class="type-list">
+						<ul class="type-list" >
 							<li>
-								<a>0-500元</a>
+								<a href="#" ng-click="buildSearchItem('price','0-500')">0-500元</a>
 							</li>
 							<li>
-								<a>500-1000元</a>
+								<a href="#" ng-click="buildSearchItem('price','500-1000')">500-1000元</a>
 							</li>
 							<li>
-								<a>1000-1500元</a>
+								<a href="#" ng-click="buildSearchItem('price','1000-1500')">1000-1500元</a>
 							</li>
 							<li>
-								<a>1500-2000元</a>
+								<a href="#" ng-click="buildSearchItem('price','1500-2000')">1500-2000元</a>
 							</li>
 							<li>
-								<a>2000-3000元 </a>
+								<a href="#" ng-click="buildSearchItem('price','2000-3000')">2000-3000元 </a>
 							</li>
 							<li>
-								<a>3000元以上</a>
+								<a href="#" ng-click="buildSearchItem('price','3000-*')">3000元以上</a>
 							</li>
 						</ul>
 					</div>
@@ -351,34 +317,27 @@
 				</div>
 				<div class="fr page">
 					<div class="sui-pagination pagination-large">
+
 						<ul>
-							<li class="prev disabled">
-								<a href="#">«上一页</a>
+							<li class="prev {{isfirstPage()?'disabled':''}}">
+								<a href="#" ng-click="queryByPage(searchMap.currentPage-1)">«</a>
 							</li>
-							<li class="active">
-								<a href="#">1</a>
+							<li class="dotted" ng-show="firstDot"><span>...</span></li>
+
+							<li class="active"  ng-repeat="item in limitPage" >
+								<a href="#"  style="{{ isActive(item)?'background: #1aa5fb':''}}"  ng-click="queryByPage(item);">{{item}}</a>
 							</li>
-							<li>
-								<a href="#">2</a>
-							</li>
-							<li>
-								<a href="#">3</a>
-							</li>
-							<li>
-								<a href="#">4</a>
-							</li>
-							<li>
-								<a href="#">5</a>
-							</li>
-							<li class="dotted"><span>...</span></li>
-							<li class="next">
-								<a href="#">下一页»</a>
+
+							<li class="dotted" ng-show="lastFot"><span>...</span></li>
+
+							<li class="next {{islastPage()?'disabled':''}}" >
+								<a href="#" ng-click="queryByPage(searchMap.currentPage+1)">»</a>
 							</li>
 						</ul>
-						<div><span>共10页&nbsp;</span><span>
+						<div><span>共{{page}}页&nbsp;</span><span>
       到第
-      <input type="text" class="page-num">
-      页 <button class="page-confirm" onclick="alert(1)">确定</button></span></div>
+      <input type="text" class="page-num" ng-model="toPage">
+      页 <button class="page-confirm" ng-click="goToPage(toPage);">确定</button></span></div>
 					</div>
 				</div>
 			</div>
