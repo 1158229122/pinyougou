@@ -43,13 +43,17 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         Map<String, Object> map = new HashMap<String, Object>();
         //获取搜索的条件
         String keywords = (String) searchMap.get("keywords");
+        if (!StringUtils.isEmpty(keywords)){
+            keywords = keywords.replace(" ", "");//处理空字符串
+        }
+
         if("".equals(keywords)){
             keywords="*";//如果搜索条件为空,查询所有
             System.out.println(keywords);
         }
         SolrQuery query = new SolrQuery("item_keywords:"+keywords);
         //获取搜索条件结束
-        
+
         //设置过滤条件
         addFilterSearch(query,searchMap);
         //过滤条件设置结束
@@ -60,8 +64,8 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         //分组查询
 
         if(!"*".equals(keywords)){
-            map.put("category", searchGroup(query));//如果没有输入条件的时候不启用分组查询
-            List<String> categoryList = searchGroup(query);
+            map.put("category", searchGroup(keywords));//如果没有输入条件的时候不启用分组查询
+            List<String> categoryList = searchGroup(keywords);
 
             //条件查询获取品牌和规格
             if (categoryList.size()>0){
@@ -74,6 +78,25 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
     //设置用户需要过滤的条件
     private void addFilterSearch(SolrQuery query,Map searchMap){
+        //设置价格排序过滤
+        Map<String,String> sort = (Map<String, String>) searchMap.get("sort");//获取排序对象
+       if (sort!=null&&sort.size()>0){//entity.getkey是域字段entity.get.getGetValue是排序字段
+           for (Map.Entry<String, String> entry : sort.entrySet()) {
+               if (!StringUtils.isEmpty(entry.getKey())&&!StringUtils.isEmpty(entry.getValue())){
+                        if ("asc".equalsIgnoreCase(entry.getValue())){
+                            query.addSort(entry.getKey(), SolrQuery.ORDER.asc);
+                        }
+                        if ("desc".equalsIgnoreCase(entry.getValue())){
+                            query.addSort(entry.getKey(), SolrQuery.ORDER.desc);
+                        }
+
+               }
+           }
+       }
+
+
+
+
         //设置品牌过滤
         String brand = (String) searchMap.get("brand");
         if (!"".equals(brand)){
@@ -135,7 +158,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         try {
             /******************** 高亮开始 ************************/
             query.setHighlight(true);//开启高亮
-            query.setHighlightSimplePre("<em color=red>");//设置前缀
+            query.setHighlightSimplePre("<em style= 'color: red'>");//设置前缀
             query.setHighlightSimplePost("</em>");//设置后缀
             query.addHighlightField("item_title");//添加需要被高亮的域
             QueryResponse queryResponse = solrServer.query(query);
@@ -183,7 +206,8 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     }
 
     //分组查询
-    private List<String> searchGroup(SolrQuery query){
+    private List<String> searchGroup(String keywords){
+        SolrQuery query = new SolrQuery("item_keywords:"+keywords);
         query.setParam(GroupParams.GROUP,true);//是否分组
         query.setParam(GroupParams.GROUP_FIELD,"item_category");//分组的域
         // query.setParam(GroupParams.GROUP_LIMIT,"1");//每组显示的个数，默认为1

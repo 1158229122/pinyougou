@@ -1,17 +1,34 @@
 app.controller("searchController",function ($scope,searchService) {
     $scope.rowsList = {};//返回的数据
-    $scope.searchMap= {"keywords":"","brand":"","category":"","price" : '',"currentPage":'1',"pageRows":'20',spec:{}};
-    
-    //主线查询
+    $scope.searchMap= {"keywords":"","brand":"","category":"","price" : '',"currentPage":'1',"pageRows":'20',spec:{},sort:{}};
+
     function isNum(a){
         var regexp =  /^[0-9]+.?[0-9]*$/;
         return regexp.test(a);
+    }
+    //判断关键字是否包含品牌
+    $scope.keywordsIsBrand = function(){
+
+    }
+
+    //排序查询
+    $scope.orderSearch = function(key,value){
+        $scope.searchMap.sort[key] = value;
+        $scope.search();//调用查询
     }
     //去哪页
     $scope.goToPage = function(toPage){
         $scope.searchMap.currentPage = toPage;
         $scope.search();
     }
+
+    $(document).keydown(function(event){
+　　　　if(event.keyCode == 13){
+            $scope.search();
+    　　}
+    });
+
+    //主线查询
     //搜索,所有的方法都走这条主线
     $scope.search = function(){
 

@@ -84,8 +84,8 @@
 									<form action="" class="sui-form form-inline">
 										<!--searchAutoComplete-->
 										<div class="input-append">
-											<input type="text" id="autocomplete" type="text" ng-change="searchMap.category='';searchMap.brand='';searchMap.spec={};"  ng-model="searchMap.keywords" class="input-error input-xxlarge" />
-											<button class="sui-btn btn-xlarge btn-danger" type="button" ng-click="searchMap.currentPage='1';search()">搜索</button>
+											<input type="text" id="autocomplete" type="text" ng-change="searchMap.category='';searchMap.brand='';searchMap.spec={};searchMap.sort={}"  ng-model="searchMap.keywords" class="input-error input-xxlarge" />
+											<button  class="sui-btn btn-xlarge btn-danger" type="button" ng-click="searchMap.currentPage='1';search()">搜索</button>
 										</div>
 									</form>
 								</div>
@@ -271,13 +271,16 @@
 								<a href="#">销量</a>
 							</li>
 							<li>
-								<a href="#">新品</a>
+								<a href="#" ng-click="orderSearch('item_updateTime','desc')">新品</a>
 							</li>
 							<li>
 								<a href="#">评价</a>
 							</li>
 							<li>
-								<a href="#">价格</a>
+								<a href="#" ng-click="orderSearch('item_price','asc')">价格↑</a>
+							</li>
+							<li>
+								<a href="#" ng-click="orderSearch('item_price','desc')">价格↓</a>
 							</li>
 						</ul>
 					</div>
