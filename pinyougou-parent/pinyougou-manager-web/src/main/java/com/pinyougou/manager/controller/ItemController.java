@@ -1,6 +1,7 @@
 package com.pinyougou.manager.controller;
 import java.util.List;
 
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ public class ItemController {
 
 	@Reference
 	private ItemService itemService;
+
 	
 	/**
 	 * 返回全部列表
@@ -49,7 +51,14 @@ public class ItemController {
 	@RequestMapping("/add")
 	public Result add(@RequestBody TbItem item){
 		try {
+			/**
+			 * 跟新索引
+			 */
+
+
+
 			itemService.add(item);
+
 			return new Result(true, "增加成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,6 +75,7 @@ public class ItemController {
 	public Result update(@RequestBody TbItem item){
 		try {
 			itemService.update(item);
+
 			return new Result(true, "修改成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,7 +111,7 @@ public class ItemController {
 	
 		/**
 	 * 查询+分页
-	 * @param brand
+	 * @param item
 	 * @param page
 	 * @param rows
 	 * @return

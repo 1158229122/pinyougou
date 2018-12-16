@@ -15,7 +15,11 @@
 
 
     <dependencies>
+
+
+
         <dependency>
+
             <groupId>com.pinyougou</groupId>
             <artifactId>pinyougou-sellergoods-interface</artifactId>
             <version>1.0-SNAPSHOT</version>

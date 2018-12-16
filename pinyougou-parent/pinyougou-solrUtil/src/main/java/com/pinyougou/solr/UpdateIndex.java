@@ -25,7 +25,7 @@ public class UpdateIndex {
 
         TbItemExample example = new TbItemExample();
         TbItemExample.Criteria criteria = example.createCriteria();
-        criteria.andStatusEqualTo("1");//设置状态为1
+        criteria.andStatusEqualTo("2");//设置状态为1
         List<TbItem> items = itemMapper.selectByExample(example);
         for (TbItem item : items) {
             Map map = JSON.parseObject(item.getSpec(), Map.class);
@@ -36,4 +36,6 @@ public class UpdateIndex {
 
 
     }
+
+
 }

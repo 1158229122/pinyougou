@@ -1,8 +1,9 @@
 package com.pinyougou.search.service.impl;
 
-import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.druid.sql.ast.expr.SQLCaseExpr;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -20,6 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.Criteria;
+import org.springframework.data.solr.core.query.Query;
+import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.SolrDataQuery;
+import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -38,6 +44,16 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     private HttpSolrServer solrServer;
     @Autowired
     private RedisTemplate redisTemplate;
+
+    public void updateIndex(TbItem item){
+       solrTemplate.saveBean(item);
+    }
+
+    /**
+     * 条件查询
+     * @param searchMap
+     * @return
+     */
     @Override
     public Map<String, Object> search(Map searchMap)  {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -74,6 +90,27 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             }
         }
         return map;
+    }
+
+    @Override
+    public void importList(List list) {
+        for (Object obj : list) {
+            TbItem item = (TbItem) obj;
+            Map map = JSON.parseObject(item.getSpec(), Map.class);
+            item.setSpecMap(map);
+        }
+        solrTemplate.saveBeans(list);
+        solrTemplate.commit();
+
+    }
+
+    @Override
+    public void deleteByGoodsIds(List goodsIdList) {
+        Query query = new SimpleQuery();
+        Criteria criteria=new Criteria("item_goodsid").in(goodsIdList);
+        query.addCriteria(criteria);
+        solrTemplate.delete(query);
+        solrTemplate.commit();
     }
 
     //设置用户需要过滤的条件

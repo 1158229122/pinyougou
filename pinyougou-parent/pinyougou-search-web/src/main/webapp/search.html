@@ -20,7 +20,7 @@
 
 	</head>
 
-	<body ng-app="app" ng-controller="searchController" ng-init="search();">
+	<body ng-app="app" ng-controller="searchController" ng-init="search();indexSearch();">
 
 		<!-- 头部栏位 -->
 		<!--页面顶部-->
@@ -180,7 +180,7 @@
 					</div>
 					<div class="fl ext"></div>
 				</div>
-				<div class="type-wrap logo" ng-show="resultMap.brandList!=null && searchMap.brand==''">
+				<div class="type-wrap logo" ng-show="resultMap.brandList!=null && searchMap.brand==''&&!keywordsIsBrand()">
 					<div class="fl key brand">品牌</div>
 					<div class="value logos">
 						<ul class="logo-list">
@@ -290,7 +290,7 @@
 						<li class="yui3-u-1-5" ng-repeat="item in resultMap.rows">
 							<div class="list-wrap">
 								<div class="p-img">
-									<a href="item.html" target="_blank"><img src="{{item.image}}" /></a>
+									<a href="http://localhost:8080/{{item.goodsId}}.html" target="_blank"><img src="{{item.image}}" /></a>
 								</div>
 								<div class="price">
 									<strong>

@@ -1,4 +1,4 @@
-app.controller("searchController",function ($scope,searchService) {
+app.controller("searchController",function ($location,$scope,searchService) {
     $scope.rowsList = {};//返回的数据
     $scope.searchMap= {"keywords":"","brand":"","category":"","price" : '',"currentPage":'1',"pageRows":'20',spec:{},sort:{}};
 
@@ -6,9 +6,26 @@ app.controller("searchController",function ($scope,searchService) {
         var regexp =  /^[0-9]+.?[0-9]*$/;
         return regexp.test(a);
     }
+
+    /**
+     * 根据前面的主页查询
+     */
+    $scope.indexSearch = function(){
+        $scope.searchMap.keywords = $location.search()["keywords"];
+        $scope.search();
+    }
     //判断关键字是否包含品牌
     $scope.keywordsIsBrand = function(){
+       for (var i=0;i<$scope.resultMap.brandList.length;i++){
 
+           if ($scope.searchMap.brand.indexOf($scope.resultMap.brandList[i]) != -1){
+               //alert(1);
+               return true;
+           }
+
+       }
+        //alert(2);
+        return false;
     }
 
     //排序查询

@@ -8,5 +8,8 @@ app.controller('contentController' ,function($scope,$http,contentService){
             }
 		)
     }
+    $scope.searchLocation = function () {
+		location.href="http://localhost:9104/search.html#?keywords="+$scope.search;
+    }
 
 });	

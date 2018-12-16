@@ -61,6 +61,7 @@ public class GoodsController {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			String sellerId = authentication.getName();
 			goods.getGoods().setSellerId(sellerId);
+			//添加到索引库
 			goodsService.add(goods);
 
 

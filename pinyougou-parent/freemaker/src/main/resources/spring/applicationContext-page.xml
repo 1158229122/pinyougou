@@ -8,10 +8,11 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <dubbo:protocol name="dubbo" port="20881"></dubbo:protocol>
-    <dubbo:application name="pinyougou-sellergoods-service"/>
-    <dubbo:registry address="zookeeper://192.168.25.168:2181"/>
-    <dubbo:annotation package="com.pinyougou.sellergoods.service.impl"/>
+    <bean id="freemarkerConfig"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/stl/" />
+        <property name="defaultEncoding" value="UTF-8" />
+    </bean>
 
 
 </beans>
