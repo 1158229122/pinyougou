@@ -12,7 +12,7 @@ public interface ItemSearchService {
      * @param map
      * @return
      */
-    public Map<String,Object> search(Map map) throws IOException;
+    public Map<String,Object> search(Map map) ;
 
     /**
      * 导入数据

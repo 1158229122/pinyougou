@@ -1,15 +1,16 @@
 package com.pinyougou.manager.controller;
-import java.util.Arrays;
 import java.util.List;
 
 
 import com.alibaba.fastjson.JSON;
 
+import com.pinyougou.activemq.ActiveMq;
 import com.pinyougou.pojo.TbItem;
 
 import entity.Goods;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -23,10 +24,7 @@ import com.pinyougou.sellergoods.service.GoodsService;
 import entity.PageResult;
 import entity.Result;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
+import javax.jms.*;
 
 /**
  * controller
@@ -87,7 +85,11 @@ public class GoodsController {
 	 * @param status
 	 * @return
 	 */
+	@Autowired
+	private Destination queueTextDestination;
 
+	@Autowired
+	private Destination topicTextDestination;
 	@RequestMapping("updateStatus")
 	public Result updateStatus(Long ids[], String status) {
 		Result result = new Result();
@@ -98,10 +100,13 @@ public class GoodsController {
 			//静态页生成
 			if ("2".equalsIgnoreCase(status)){
 				for(Long goodsId:ids){
-					jmsTemplate.send(new ActiveMQTopic(ActiveMq.ADD_PAGE_TO_FREEMAKER), new MessageCreator() {
+					jmsTemplate.send(topicTextDestination, new MessageCreator() {
 						@Override
 						public Message createMessage(Session session) throws JMSException {
-							return session.createTextMessage(goodsId+"");
+                            TextMessage textMessage = session.createTextMessage();
+                            textMessage.setJMSType(ActiveMq.ADD_PAGE_TO_FREEMAKER);
+                            textMessage.setText(goodsId+"");
+                            return textMessage;
 						}
 					});
 					//itemPageService.genItemHtml(goodsId);
@@ -115,10 +120,13 @@ public class GoodsController {
 			List<TbItem> itemList = goodsService.findItemListByGoodsIdandStatus(ids, status);
 			String jsonString = JSON.toJSONString(itemList);
 			if (itemList.size()>0&&itemList!=null){
- 				jmsTemplate.send(new ActiveMQQueue(ActiveMq.ADD_INDEX_TO_SOLR), new MessageCreator() {
+ 				jmsTemplate.send(queueTextDestination, new MessageCreator() {
 					@Override
 					public Message createMessage(Session session) throws JMSException {
-						return session.createTextMessage(jsonString);
+                        TextMessage textMessage = session.createTextMessage();
+                        textMessage.setJMSType(ActiveMq.ADD_INDEX_TO_SOLR);
+                        textMessage.setText(jsonString);
+                        return textMessage;
 					}
 				});
 
@@ -173,14 +181,31 @@ public class GoodsController {
 		try {
 			//删除索引
 
-			jmsTemplate.send(new ActiveMQQueue(ActiveMq.DELETE_INDEX_TO_SOLR), new MessageCreator() {
+			jmsTemplate.send(queueTextDestination, new MessageCreator() {
 				@Override
 				public Message createMessage(Session session) throws JMSException {
-					return session.createObjectMessage(ids);
+                    ObjectMessage objectMessage = session.createObjectMessage();
+                    objectMessage.setJMSType(ActiveMq.DELETE_INDEX_TO_SOLR);
+                    objectMessage.setObject(ids);
+                    return objectMessage;
 				}
 			});
 
-			goodsService.delete(ids);
+			//删除静态页面
+            //删除每个服务器上的商品详细页
+            jmsTemplate.send(topicTextDestination, new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    ObjectMessage objectMessage = session.createObjectMessage();
+                    objectMessage.setJMSType(ActiveMq.DELETE_PAGE_TO_FREEMAKER);
+                    objectMessage.setObject(ids);
+                    return objectMessage;
+                    //return session.createObjectMessage(ids);
+                }
+            });
+
+
+            goodsService.delete(ids);
 			return new Result(true, "删除成功");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -8,6 +8,7 @@
     <artifactId>pinyougou-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
         <module>pinyougou-pojo</module>
         <module>pinyougou-dao</module>
@@ -27,7 +28,6 @@
         <module>freemaker</module>
         <module>pinyougou-page-service</module>
         <module>pinyougou-page-interface</module>
-
     </modules>
 
     <!-- 集中定义依赖版本号 -->
