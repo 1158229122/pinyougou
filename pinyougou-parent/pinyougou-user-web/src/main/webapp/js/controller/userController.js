@@ -46,6 +46,12 @@ app.controller('userController' ,function($scope,$controller   ,userService){
 		)
     }
 	 
-
+	$scope.showName = function () {
+		userService.getUsername().success(
+			function (response) {
+				$scope.loginName = response.loginName;
+            }
+		)
+    }
     
 });	

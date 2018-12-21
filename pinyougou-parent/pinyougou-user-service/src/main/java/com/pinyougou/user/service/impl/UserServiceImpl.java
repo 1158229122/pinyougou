@@ -26,7 +26,7 @@ import entity.PageResult;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.springframework.web.servlet.handler.DispatcherServletWebRequest;
+
 
 import javax.jms.*;
 
@@ -173,6 +173,7 @@ public class UserServiceImpl implements UserService {
 		//	生成6位数的验证码,放入redis
 		String code = (int) (Math.random()*1000000)+"";
 		redisTemplate.boundHashOps("smsCode").put(phone,code);
+
 		System.out.println("验证码为:"+code);
 		// 调用activemq发送短信微服务
 		jmsTemplate.send(queueTextDestination, new MessageCreator() {

@@ -1,8 +1,11 @@
 package com.pinyougou.user.controller;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.pinyougou.pojo.TbUser;
 import com.pinyouygou.user.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -124,5 +127,13 @@ public class UserController {
 	public Result createSmsCode(String phone){
 		return userService.createSmsCode(phone);
 	}
-	
+
+	@RequestMapping("/getUsername")
+	public Map getName(){
+		Map map = new HashMap();
+		//获取用户名
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		map.put("loginName",name );
+		return map;
+	}
 }
