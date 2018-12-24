@@ -7,13 +7,17 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 		<title>微信支付页</title>
         <link rel="icon" href="/assets/img/favicon.ico">
-		
-	
-    <link rel="stylesheet" type="text/css" href="css/webbase.css" />
+		<link rel="stylesheet" type="text/css" href="css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-weixinpay.css" />
-</head>
 
-	<body>
+		<script type="text/javascript" src="plugins/angularjs/angular.min.js"> </script>
+		<script type="text/javascript" src="js/base.js"> </script>
+		<script type="text/javascript" src="js/service/payService.js"> </script>
+		<script type="text/javascript" src="js/controller/payController.js"> </script>
+		<script type="text/javascript" src="js/qrious.min.js"> </script>
+</head >
+{{order}}
+	<body ng-app="app" ng-controller="payController" ng-init="createPayUri();">
 		<!--head-->
 		<div class="top">
 			<div class="py-container">
@@ -56,10 +60,10 @@
 				<div class="checkout-steps">
 					<div class="fl weixin">微信支付</div>
                     <div class="fl sao"> 
-                        <p class="red">二维码已过期，刷新页面重新获取二维码。</p>                      
+
                         <div class="fl code">
-                            <img src="img/erweima.png" alt="">
-                            <div class="saosao">
+							<img id="qrious">
+							<div class="saosao">
                                 <p>请使用微信扫一扫</p>
                                 <p>扫描二维码支付</p>
                             </div>

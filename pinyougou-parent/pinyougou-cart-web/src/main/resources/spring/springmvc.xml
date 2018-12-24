@@ -24,7 +24,12 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-
+    <bean id="idWorker" class="com.pinyougou.utils.IdWorker">
+        <!-- 进程 ID -->
+        <constructor-arg index="0" value="1"></constructor-arg>
+        <!-- 数据中心 ID -->
+        <constructor-arg index="1" value="1"></constructor-arg>
+    </bean>
 
 
     <!-- 引用dubbo 服务 -->
