@@ -8,12 +8,17 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <bean id="idWorker" class="com.pinyougou.utils.IdWorker">
+        <!-- 进程 ID -->
+        <constructor-arg index="0" value="0"></constructor-arg>
+        <!-- 数据中心 ID -->
+        <constructor-arg index="1" value="0"></constructor-arg>
+    </bean>
 
-
-    <dubbo:protocol name="dubbo" port="20888"></dubbo:protocol>
-    <dubbo:application name="pinyougou-cart-service"/>
+    <dubbo:protocol name="dubbo" port="20889"></dubbo:protocol>
+    <dubbo:application name="pinyougou-order-service"/>
     <dubbo:registry address="zookeeper://192.168.25.168:2181"/>
-    <dubbo:annotation package="com.pinyougou.cart.service.impl"/>
+    <dubbo:annotation package="com.pinyougou.order.service.impl"/>
 
 
 </beans>
