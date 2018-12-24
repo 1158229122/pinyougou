@@ -122,16 +122,15 @@ public class GoodsController {
 			if (itemList.size()>0&&itemList!=null){
  				jmsTemplate.send(queueTextDestination, new MessageCreator() {
 					@Override
+
 					public Message createMessage(Session session) throws JMSException {
                         TextMessage textMessage = session.createTextMessage();
                         textMessage.setJMSType(ActiveMq.ADD_INDEX_TO_SOLR);
                         textMessage.setText(jsonString);
+						System.out.println(jsonString);
                         return textMessage;
 					}
 				});
-
-
-
 			}else {
 				System.out.println("没有明细的数据");
 			}

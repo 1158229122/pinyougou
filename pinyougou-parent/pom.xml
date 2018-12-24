@@ -32,6 +32,9 @@
         <module>pinyougou-user-service</module>
         <module>pinyougou-user-interface</module>
         <module>casclictdemo</module>
+        <module>pinyougou-cart-interface</module>
+        <module>pinyougou-cart-service</module>
+        <module>pinyougou-cart-web</module>
 
     </modules>
 
