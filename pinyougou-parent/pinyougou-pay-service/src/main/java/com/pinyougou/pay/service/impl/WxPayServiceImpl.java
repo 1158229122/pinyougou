@@ -29,6 +29,19 @@ public class WxPayServiceImpl implements PayService {
     }
 
     /**
+     * 关闭支付
+     * @param out_trade_no
+     * @return
+     */
+    @Override
+    public Map closePay(String out_trade_no) {
+        String url="https://api.mch.weixin.qq.com/pay/closeorder";
+        return getPayStatus(out_trade_no,url);
+    }
+
+
+
+    /**
      * 生成二维码
      * @return
      */
@@ -69,12 +82,17 @@ public class WxPayServiceImpl implements PayService {
 
     @Override
     public Map queryPayStatus(String out_trade_no) {
+        String url="https://api.mch.weixin.qq.com/pay/orderquery";
+        return getPayStatus(out_trade_no,url);
+    }
+
+    private Map getPayStatus(String out_trade_no,String url) {
         Map param=new HashMap();
         param.put("appid", appid);//公众账号 ID
         param.put("mch_id", partner);//商户号
         param.put("out_trade_no", out_trade_no);//订单号
         param.put("nonce_str", WXPayUtil.generateNonceStr());//随机字符串
-        String url="https://api.mch.weixin.qq.com/pay/orderquery";
+
         try {
             String xmlParam = WXPayUtil.generateSignedXml(param, partnerkey);
             HttpClient client=new HttpClient(url);

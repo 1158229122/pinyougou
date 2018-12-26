@@ -22,4 +22,11 @@ public interface PayService {
      * @return
      */
     public TbPayLog searchPayLogFromRedis(String userId);
+
+    /**
+     * 关闭支付
+     * @param out_trade_no
+     * @return
+     */
+    public Map closePay(String out_trade_no);
 }
