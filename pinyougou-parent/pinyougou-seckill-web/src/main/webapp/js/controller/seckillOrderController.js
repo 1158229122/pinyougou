@@ -114,7 +114,7 @@ app.controller('seckillOrderController' ,function($scope,$controller   ,seckillO
 	$scope.submitOrder = function () {
 		//提交订单se
         var id = getSeckillGoodsId();
-		seckillOrderService.submitOrder($scope.entity.goodsId).success(
+		seckillOrderService.submitOrder($scope.entity.id).success(
             function(response){
                 if(response.success){
                     alert("下单成功，请在 1 分钟内完成支付");

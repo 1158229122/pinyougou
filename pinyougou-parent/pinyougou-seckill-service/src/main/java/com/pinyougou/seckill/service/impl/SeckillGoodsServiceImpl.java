@@ -129,13 +129,10 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 			//saveToRedis
 			if (seckillGoodsList!=null&&seckillGoodsList.size()>0){
 				for (TbSeckillGoods seckillGoods : seckillGoodsList) {
-					if (seckillGoods.getStockCount()>=1&&"2".equals(seckillGoods.getStatus())){
-						redisTemplate.boundHashOps("seckillGoods").put(seckillGoods.getGoodsId(),seckillGoods );
-					}
+					redisTemplate.boundHashOps("seckillGoods").put(seckillGoods.getId(),seckillGoods );
 				}
 			}
 			System.out.println("数据库中查询");
-
 		}else {
 			System.out.println("redis中查");
 		}

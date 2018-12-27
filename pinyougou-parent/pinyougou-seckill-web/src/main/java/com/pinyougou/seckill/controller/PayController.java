@@ -81,10 +81,12 @@ public class PayController {
                 }
                 if (result.getSuccess()==false){
                     //直接删除
+                    System.out.println("deletePaying......");
                     seckillOrderService.deleteOrderFromRedis(userId,out_trade_no );
                 }
                 break;
             }
+            System.out.println("queryPaying.....");
         }
         return result;
     }
