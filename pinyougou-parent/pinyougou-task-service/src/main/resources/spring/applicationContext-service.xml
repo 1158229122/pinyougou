@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+    <!--配置需要扫描的包 (定时任务类所在的包路径)-->
+    <context:component-scan base-package="com.pinyougou.task.service"/>
+        <!-- 不扫描@Controller注解 -->
+        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+    <!--</context:component-scan>-->
+
+    <!--启用注解驱动，spring才能识别@Scheduled注解-->
+    <task:annotation-driven scheduler="taskScheduler" mode="proxy"/>
+    <!--配置定时任务线程池线程数量， 官方推荐pool-size：5-10 -->
+    <task:scheduler id="taskScheduler" pool-size="10"/>
+</beans>
